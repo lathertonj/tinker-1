@@ -57,7 +57,7 @@ Blockly.Blocks['ugen'] = {
             }
         ), "OscType")
         .appendField("(")
-        .appendField(new Blockly.FieldImage("http://i.imgur.com/nrNWnyK.png", 50, 30, "*"), "oscimage")
+        .appendField(new Blockly.FieldImage("http://i.imgur.com/nrNWnyK.png", 50, 20, "*"), "oscimage")
         .appendField(")  called")
         .appendField(new Blockly.FieldTextInput("my_sound"), "varname");
     //this.getField("oscimage").EDITABLE = true;
