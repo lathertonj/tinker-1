@@ -76,6 +76,7 @@ Blockly.Blocks['ugen_params'] = {
   init: function() {
     this.appendValueInput("ugen_param")
         .setCheck("UGen")
+        .appendField(" ")
         .appendField(new Blockly.FieldDropdown([["frequency of oscillator","freq"], ["note of oscillator","note"], ["loudness of oscillator","gain"]]), "param_name");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
