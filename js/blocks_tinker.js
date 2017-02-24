@@ -117,27 +117,8 @@ Blockly.Blocks['ugen_params'] = {
     this.setPreviousStatement(true, null);
     this.setColour(230);
     this.setTooltip('');
-    console.log(this);
-    console.log(my_min_val);
   }
 };
-
-
-// Blockly.Blocks['ugen_params'] = {
-//   category: 'Sonification',
-//   helpUrl: 'http://www.example.com/',
-//   init: function() {
-//     this.appendValueInput("ugen_param")
-//         .setCheck("UGen")
-//         .appendField(" ")
-//         .appendField(new Blockly.FieldDropdown([["frequency of oscillator","freq"], ["note of oscillator","note"], ["loudness of oscillator","gain"]]), "param_name");
-//     this.setInputsInline(true);
-//     this.setPreviousStatement(true, null);
-//     this.setNextStatement(false, null);
-//     this.setColour(230);
-//     this.setTooltip('');
-//   }
-// };
 
 
 Blockly.Blocks['data_processor'] = {
