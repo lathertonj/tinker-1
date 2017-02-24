@@ -1215,6 +1215,14 @@ Blockly.GogoCode['init_sonification'] = function(block) {
   return code;
 };
 
+// Blockly.GogoCode['ugen_old'] = function(block) {
+//   var dropdown_osctype = block.getFieldValue('OscType');
+//   var text_varname = block.getFieldValue('varname');
+//   var code = 'newosc/' + dropdown_osctype + '/' + text_varname;
+//   // TODO: Change ORDER_NONE to the correct strength.
+//   return [code, Blockly.GogoCode.ORDER_NONE];
+// };
+
 Blockly.GogoCode['ugen'] = function(block) {
   var dropdown_osctype = block.getFieldValue('OscType');
   var text_varname = block.getFieldValue('varname');

@@ -14,19 +14,57 @@ Blockly.Blocks['init_sonification'] = {
 };
 
 
+// Blockly.Blocks['ugen_old'] = {
+//   category: 'Sonification',
+//   helpUrl: 'http://www.example.com/',
+//   init: function() {
+//     this.appendDummyInput()
+//         //.appendField(new Blockly.FieldDropdown([[{"src":"http://i.imgur.com/nrNWnyK.png","width":50,"height":30,"alt":"sine wave"},"sin"], [{"src":"http://i.imgur.com/ChLYYLM.png","width":50,"height":30,"alt":"triangle wave"},"tri"], [{"src":"http://i.imgur.com/jnWrCiS.png","width":50,"height":30,"alt":"square wave"},"sqr"], [{"src":"http://i.imgur.com/6mrVUEL.png","width":50,"height":30,"alt":"sawtooth wave"},"saw"]]), "OscType")
+//         //.appendField(new Blockly.FieldDropdown([['sine wave: <img src="http://i.imgur.com/nrNWnyK.png" alt="sine wave" height="30" width="50">',"sin"], ["triangle wave","tri"], ["square wave","sqr"], ["sawtooth wave","saw"]]), "OscType")
+//         .appendField(new Blockly.FieldDropdown([["a sine wave","sin"], ["a triangle wave","tri"], ["a square wave","sqr"], ["a sawtooth wave","saw"]]), "OscType")
+//         .appendField("called")
+//         .appendField(new Blockly.FieldTextInput("my_sound"), "varname");
+//     this.setInputsInline(false);
+//     this.setOutput(true, "UGen");
+//     this.setColour(275);
+//     this.setTooltip('');
+//   }
+// };
+
+
 Blockly.Blocks['ugen'] = {
   category: 'Sonification',
   helpUrl: 'http://www.example.com/',
   init: function() {
+    var thisBlock = this;
+    var thisImage = null;
     this.appendDummyInput()
-        //.appendField(new Blockly.FieldDropdown([[{"src":"http://i.imgur.com/nrNWnyK.png","width":50,"height":30,"alt":"sine wave"},"sin"], [{"src":"http://i.imgur.com/ChLYYLM.png","width":50,"height":30,"alt":"triangle wave"},"tri"], [{"src":"http://i.imgur.com/jnWrCiS.png","width":50,"height":30,"alt":"square wave"},"sqr"], [{"src":"http://i.imgur.com/6mrVUEL.png","width":50,"height":30,"alt":"sawtooth wave"},"saw"]]), "OscType")
-        //.appendField(new Blockly.FieldDropdown([['sine wave: <img src="http://i.imgur.com/nrNWnyK.png" alt="sine wave" height="30" width="50">',"sin"], ["triangle wave","tri"], ["square wave","sqr"], ["sawtooth wave","saw"]]), "OscType")
-        .appendField(new Blockly.FieldDropdown([["a sine wave","sin"], ["a triangle wave","tri"], ["a square wave","sqr"], ["a sawtooth wave","saw"]]), "OscType")
-        .appendField("called")
+        .appendField(new Blockly.FieldDropdown(
+            [["a sine wave","sin"],
+             ["a triangle wave","tri"],
+             ["a square wave","sqr"],
+             ["a sawtooth wave","saw"]
+            ],
+            function( newVal ) {
+                var newUrls = {
+                    "sin": "http://i.imgur.com/nrNWnyK.png",
+                    "tri": "http://i.imgur.com/ChLYYLM.png",
+                    "sqr": "http://i.imgur.com/jnWrCiS.png",
+                    "saw": "http://i.imgur.com/6mrVUEL.png"
+                };
+                thisImage.setValue(newUrls[newVal] || "");
+                // return newVal;
+            }
+        ), "OscType")
+        .appendField("(")
+        .appendField(new Blockly.FieldImage("http://i.imgur.com/nrNWnyK.png", 50, 30, "*"), "oscimage")
+        .appendField(") called")
         .appendField(new Blockly.FieldTextInput("my_sound"), "varname");
-    this.setInputsInline(false);
-    this.setOutput(true, "UGen");
-    this.setColour(275);
+    //this.getField("oscimage").EDITABLE = true;
+    thisImage = thisBlock.inputList[0].fieldRow[4]
+    thisImage.EDITABLE = true;
+    this.setOutput(true, null);
+    this.setColour(270);
     this.setTooltip('');
   }
 };
