@@ -40,17 +40,17 @@ Blockly.Blocks['ugen'] = {
     var thisImage = null;
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown(
-            [["a sine wave","sin"],
-             ["a triangle wave","tri"],
-             ["a square wave","sqr"],
-             ["a sawtooth wave","saw"]
+            [["sine wave","sin"],
+             ["triangle wave","tri"],
+             ["square wave","sqr"],
+             ["sawtooth wave","saw"]
             ],
             function( newVal ) {
                 var newUrls = {
-                    "sin": "http://i.imgur.com/nrNWnyK.png",
-                    "tri": "http://i.imgur.com/ChLYYLM.png",
-                    "sqr": "http://i.imgur.com/jnWrCiS.png",
-                    "saw": "http://i.imgur.com/6mrVUEL.png"
+                    "sin": "http://i.imgur.com/kBkJF5I.png",
+                    "tri": "http://i.imgur.com/bIeDw5a.png",
+                    "sqr": "http://i.imgur.com/B5TaPSe.png",
+                    "saw": "http://i.imgur.com/lmpDeM3.png"
                 };
                 thisImage.setValue(newUrls[newVal] || "");
                 // return newVal;
@@ -58,10 +58,10 @@ Blockly.Blocks['ugen'] = {
         ), "OscType")
         .appendField("(")
         .appendField(new Blockly.FieldImage("http://i.imgur.com/nrNWnyK.png", 50, 30, "*"), "oscimage")
-        .appendField(") called")
+        .appendField(")  called")
         .appendField(new Blockly.FieldTextInput("my_sound"), "varname");
     //this.getField("oscimage").EDITABLE = true;
-    thisImage = thisBlock.inputList[0].fieldRow[4]
+    thisImage = thisBlock.inputList[0].fieldRow[3]
     thisImage.EDITABLE = true;
     this.setOutput(true, null);
     this.setColour(270);
@@ -76,7 +76,7 @@ Blockly.Blocks['ugen_params'] = {
   init: function() {
     this.appendValueInput("ugen_param")
         .setCheck("UGen")
-        .appendField(new Blockly.FieldDropdown([["the frequency of","freq"], ["the note of","note"], ["the loudness of","gain"]]), "param_name");
+        .appendField(new Blockly.FieldDropdown([["frequency of oscillator","freq"], ["note of oscillator","note"], ["loudness of oscillator","gain"]]), "param_name");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(false, null);
@@ -90,12 +90,45 @@ Blockly.Blocks['data_processor'] = {
   category: 'Sonification',
   helpUrl: 'http://www.example.com/',
   init: function() {
+    var thisBlock = this;
+    var thisImage = null;
     this.appendDummyInput()
-        .appendField("map")
-        //.appendField(new Blockly.FieldDropdown([["display","display"], [{"src":"http://i.imgur.com/qMOL6mK.png","width":50,"height":30,"alt":"linear"},"linear"], [{"src":"http://i.imgur.com/3JFdvv4.png","width":50,"height":30,"alt":"reverse"},"reverse"], [{"src":"http://i.imgur.com/ktFMewY.png","width":50,"height":30,"alt":"constant"},"const"], [{"src":"http://i.imgur.com/lQ8YxGo.png","width":50,"height":30,"alt":"exponential"},"expcos"], [{"src":"http://i.imgur.com/pAq1pH9.png","width":50,"height":30,"alt":"logistic"},"logisticcos"], [{"src":"http://i.imgur.com/Wm1tc6T.png","width":50,"height":30,"alt":"step"},"step"], [{"src":"http://i.imgur.com/pHa6GMA.png","width":50,"height":30,"alt":"ramp"},"sineramp"], [{"src":"http://i.imgur.com/7e3N9ws.png","width":50,"height":30,"alt":"logistic2"},"logistic"], [{"src":"http://i.imgur.com/x0rrq1w.png","width":50,"height":30,"alt":"exp2"},"exp"], [{"src":"http://i.imgur.com/1JhzSru.png","width":50,"height":30,"alt":"gaussian"},"gaussian"]]), "process_type")
-        .appendField(new Blockly.FieldDropdown([["display","display"], ["linear","linear"], ["reverse","reverse"], ["constant","const"], ["exponential","expcos"], ["logistic","logisticcos"], ["step","step"], ["ramp","sineramp"], ["logistic2","logistic"], ["exp2","exp"], ["gaussian","gaussian"]]), "process_type")
-        .appendField("called")
+        .appendField("transformation")
+        .appendField(new Blockly.FieldDropdown(
+            [["do nothing","linear"],
+             ["reverse","reverse"],
+             ["flatten","const"],
+             ["slow ramp","exp"],
+             ["shallow medium ramp","logisticcos"],
+             ["steep medium ramp","logistic"],
+             ["quick ramp","sineramp"],
+             ["hard cutoff","step"],
+             ["slow ramp to linear","expcos"],
+             ["hump","gaussian"]
+            ],
+            function( newVal ) {
+                var newUrls = {
+                    "linear": "http://i.imgur.com/qMOL6mK.png",
+                    "reverse": "http://i.imgur.com/3JFdvv4.png",
+                    "const": "http://i.imgur.com/ktFMewY.png",
+                    "expcos": "http://i.imgur.com/lQ8YxGo.png",
+                    "logisticcos": "http://i.imgur.com/pAq1pH9.png",
+                    "step": "http://i.imgur.com/Wm1tc6T.png",
+                    "sineramp": "http://i.imgur.com/pHa6GMA.png",
+                    "logistic": "http://i.imgur.com/7e3N9ws.png",
+                    "exp": "http://i.imgur.com/x0rrq1w.png",
+                    "gaussian": "http://i.imgur.com/1JhzSru.png"
+                };
+                thisImage.setValue(newUrls[newVal] || "");
+                // return newVal;
+            }
+        ), "process_type")
+        .appendField("(")
+        .appendField(new Blockly.FieldImage("http://i.imgur.com/qMOL6mK.png", 50, 30, "*"), "oscimage")
+        .appendField(")  called")
         .appendField(new Blockly.FieldTextInput("my_processor"), "processor_name");
+    thisImage = thisBlock.inputList[0].fieldRow[3]
+    thisImage.EDITABLE = true;
     this.setPreviousStatement(true, "DataProcessor");
     this.setNextStatement(true, "DataProcessor");
     this.setColour(0);
@@ -113,7 +146,7 @@ Blockly.Blocks['sonify'] = {
         .appendField("transform sensor");
     this.appendStatementInput("mapping")
         .setCheck(null)
-        .appendField("with");
+        .appendField("with data transformations");
     this.appendDummyInput()
         .appendField("and scale from [0, 1] to [")
         //.appendField(new Blockly.FieldNumber(30), "scale_min")
@@ -126,7 +159,7 @@ Blockly.Blocks['sonify'] = {
         .appendField("then connect this");
     this.appendStatementInput("output")
         .setCheck(null)
-        .appendField("to");
+        .appendField("to the sound parameter");
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([["and make sound","dac"], ["and be silent","blackhole"]]), "output_sample_sucker");
     this.setInputsInline(false);
