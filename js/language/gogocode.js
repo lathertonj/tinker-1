@@ -1204,3 +1204,104 @@ Blockly.GogoCode['test_do_sth'] = function(block) {
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.GogoCode.ORDER_NONE];
 };
+
+// ================================================
+
+// ================= SONIFICATION =================
+Blockly.GogoCode['init_sonification'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = '<span class="c330">sendmessage "@sonification,on//" 1</span>\nwait 20\n';
+  return code;
+};
+
+Blockly.GogoCode['ugen'] = function(block) {
+  var dropdown_osctype = block.getFieldValue('OscType');
+  var text_varname = block.getFieldValue('varname');
+  // TODO: Assemble JavaScript into code variable.
+  // TODO: make it something that sonify block can parse, rather than something directly translatable to code
+  var code = 'newosc/' + dropdown_osctype + '/' + text_varname;
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.GogoCode['ugen_params'] = function(block) {
+  var dropdown_param_name = block.getFieldValue('param_name');
+  var value_ugen_param = Blockly.GogoCode.valueToCode(block, 'ugen_param', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = value_ugen_param + '/param/' + dropdown_param_name + '/';
+  return code;
+};
+
+Blockly.GogoCode['data_processor'] = function(block) {
+  var dropdown_process_type = block.getFieldValue('process_type');
+  var text_processor_name = block.getFieldValue('processor_name');
+  // TODO: Assemble JavaScript into code variable.
+  var code = /*'data_processor/' + */ dropdown_process_type + '/' + text_processor_name + '/';
+  return code;
+};
+
+
+
+Blockly.GogoCode.sonification_number = 0;
+Blockly.GogoCode['sonify'] = function(block) {
+  var mini_message = function(s) {
+      var code = ""
+      // max = 50, leave 14 for header
+      var size_breakup = 50 - 14;
+    
+      var i = 0;
+      var brokenup = []
+      while (i < s.length) {
+          brokenup.push(s.substring(i, i + size_breakup));
+          i += size_breakup;
+      }
+      for (var i = 0; i < brokenup.length; i++) {
+          console.log(brokenup[i]);
+          code += '<span class="c330">sendmessage "@sonification,' + 
+                  brokenup[i] + '" 1</span>\n';
+      }
+      console.log(code);
+      return code
+  };
+
+  var value_sensor = Blockly.GogoCode.valueToCode(block, 'sensor', Blockly.JavaScript.ORDER_ATOMIC);
+  var statements_mapping = Blockly.GogoCode.statementToCode(block, 'mapping');
+  var number_scale_min = block.getFieldValue('scale_min');
+  var number_scale_max = block.getFieldValue('scale_max');
+  var statements_output = Blockly.GogoCode.statementToCode(block, 'output');
+  var dropdown_output_sample_sucker = block.getFieldValue('output_sample_sucker');
+
+  // error correction
+  if (!value_sensor || !statements_mapping || !number_scale_min || !number_scale_max || !statements_output) {
+    return '';
+  }
+  
+  // first, construct mapping        // no whitespace // strip end whitespace (unnecessary)
+  var mapping = statements_mapping.replace(/\s/g,''); //.replace(/^\s+|\s+$/g, '');
+  // second, construct scale
+  var scale = 'scale/' + number_scale_min + '/' + number_scale_max + '/';
+  
+  var osc_elements = statements_output.split('/');
+  var osc_type = osc_elements[1];
+  // no whitespace
+  var osc_name = osc_elements[2].replace(/\s/g,'')
+  var param_name = osc_elements[4];
+  
+  // third, send commands to setup audio graph
+  var code = mini_message('newosc/' + osc_type + '/' + osc_name + '//');
+  code += mini_message('connectosc/' + osc_type + '/' + osc_name + '/' + dropdown_output_sample_sucker + '/' + dropdown_output_sample_sucker + '//');
+  
+  var sonification_datafile = '@sonification' + Blockly.GogoCode.sonification_number;
+  Blockly.GogoCode.sonification_number++;
+  
+  code += mini_message('dataprocess/from/' + sonification_datafile + '/' + mapping + scale + osc_type + '/' + osc_name + '/' + param_name + '//');
+          
+  // while-true, send the value of the sensor 
+  code += 'forever\n[\n' + 
+          '  record ' + value_sensor + ' "' + sonification_datafile + '"\n' +
+          mini_message('checkdata/' + sonification_datafile + '//') +
+          '  wait 1 \n]\n';
+  
+  return code;
+};
+
