@@ -71,20 +71,73 @@ Blockly.Blocks['ugen'] = {
 
 
 Blockly.Blocks['ugen_params'] = {
-  category: 'Sonification',
-  helpUrl: 'http://www.example.com/',
   init: function() {
-    this.appendValueInput("ugen_param")
+    var min_val = 80;
+    var max_val = 2000;
+    var my_min_val = null;
+    var my_max_val = null;
+    
+    var validator = function(text) {
+        var new_text = Blockly.FieldTextInput.numberValidator(text) || "0";
+        var new_float = parseFloat(new_text);
+        if (new_float < min_val) {
+            new_float = min_val;
+        } else if (new_float > max_val) {
+            new_float = max_val;
+        }
+        return String(new_float);
+    };
+    
+    this.appendValueInput("osc")
         .setCheck("UGen")
-        .appendField(" ")
-        .appendField(new Blockly.FieldDropdown([["frequency of oscillator","freq"], ["note of oscillator","note"], ["loudness of oscillator","gain"]]), "param_name");
-    this.setInputsInline(true);
+        //.appendField("connect to the")
+        .appendField(new Blockly.FieldDropdown([["note","note"], ["frequency","freq"], ["loudness","gain"]], function( newVal ) {
+            if (newVal == "freq") {
+                min_val = 80;
+                max_val = 2000;
+            } else if (newVal == "note") {
+                min_val = 30;
+                max_val = 127;
+            } else if (newVal == "gain") {
+                min_val = 0;
+                max_val = 1;
+            }
+            my_min_val.setText(String(min_val));
+            my_max_val.setText(String(max_val));
+            
+        }), "param_name")
+        .appendField("using values between")
+        .appendField(new Blockly.FieldTextInput("30", validator), "scale_min")
+        .appendField("and")
+        .appendField(new Blockly.FieldTextInput("127", validator), "scale_max")
+        .appendField("[ SOME EXTRA TEXT ] ");        
+    my_min_val = this.inputList[0].fieldRow[2];
+    my_max_val = this.inputList[0].fieldRow[4];
+    this.setInputsInline(false); // BROKEN
     this.setPreviousStatement(true, null);
-    this.setNextStatement(false, null);
     this.setColour(230);
     this.setTooltip('');
+    console.log(this);
+    console.log(my_min_val);
   }
 };
+
+
+// Blockly.Blocks['ugen_params'] = {
+//   category: 'Sonification',
+//   helpUrl: 'http://www.example.com/',
+//   init: function() {
+//     this.appendValueInput("ugen_param")
+//         .setCheck("UGen")
+//         .appendField(" ")
+//         .appendField(new Blockly.FieldDropdown([["frequency of oscillator","freq"], ["note of oscillator","note"], ["loudness of oscillator","gain"]]), "param_name");
+//     this.setInputsInline(true);
+//     this.setPreviousStatement(true, null);
+//     this.setNextStatement(false, null);
+//     this.setColour(230);
+//     this.setTooltip('');
+//   }
+// };
 
 
 Blockly.Blocks['data_processor'] = {
@@ -126,8 +179,7 @@ Blockly.Blocks['data_processor'] = {
         ), "process_type")
         .appendField("(")
         .appendField(new Blockly.FieldImage("http://i.imgur.com/qMOL6mK.png", 50, 30, "*"), "oscimage")
-        .appendField(")  called")
-        .appendField(new Blockly.FieldTextInput("my_processor"), "processor_name");
+        .appendField(")")
     thisImage = thisBlock.inputList[0].fieldRow[3]
     thisImage.EDITABLE = true;
     this.setPreviousStatement(true, "DataProcessor");
@@ -149,20 +201,10 @@ Blockly.Blocks['sonify'] = {
         .setCheck(null)
         .appendField("with data transformations");
     this.appendDummyInput()
-        .appendField("and scale from [0, 1] to [")
-        //.appendField(new Blockly.FieldNumber(30), "scale_min")
-        .appendField(new Blockly.FieldTextInput("30"), "scale_min")
-        .appendField(",")
-        //.appendField(new Blockly.FieldNumber(100), "scale_max")
-        .appendField(new Blockly.FieldTextInput("100"), "scale_max")
-        .appendField("]");
-    this.appendDummyInput()
         .appendField("then connect this");
     this.appendStatementInput("output")
         .setCheck(null)
         .appendField("to the sound parameter");
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["and make sound","dac"], ["and be silent","blackhole"]]), "output_sample_sucker");
     this.setInputsInline(false);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);

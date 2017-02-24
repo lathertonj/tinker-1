@@ -1212,6 +1212,7 @@ Blockly.GogoCode.sonification_endcommands = '';
 Blockly.GogoCode['init_sonification'] = function(block) {
   var code = '<span class="c330">sendmessage "@sonification,on//" 1</span>\nwait 20\n';
   Blockly.GogoCode.sonification_endcommands = '';
+  Blockly.GogoCode.sonification_graph_num = 1;
   return code;
 };
 
@@ -1233,14 +1234,36 @@ Blockly.GogoCode['ugen'] = function(block) {
 
 Blockly.GogoCode['ugen_params'] = function(block) {
   var dropdown_param_name = block.getFieldValue('param_name');
-  var value_ugen_param = Blockly.GogoCode.valueToCode(block, 'ugen_param', Blockly.GogoCode.ORDER_ATOMIC);
-  var code = value_ugen_param + '/param/' + dropdown_param_name + '/';
+  var value_osc = Blockly.GogoCode.valueToCode(block, 'osc', Blockly.GogoCode.ORDER_ATOMIC);
+  var text_scale_min = block.getFieldValue('scale_min');
+  var text_scale_max = block.getFieldValue('scale_max');
+
+  var code = 'scale/' + text_scale_min + '/' + text_scale_max + '/';
+  code += value_osc + '/' + dropdown_param_name;
+  console.log(code);
   return code;
 };
 
+Blockly.GogoCode.sonification_graph_prefixes = {
+    "linear": "do_nothing",
+    "reverse": "reverse",
+    "const": "flatten",
+    "exp": "slow_ramp",
+    "logisticcos": "shallow_medium_ramp",
+    "logistic": "steep_medium_ramp",
+    "sineramp": "quick_ramp",
+    "step": "hard_cutoff",
+    "expcos": "slow_ramp_to_linear",
+    "gaussian": "hump"
+}
+Blockly.GogoCode.sonification_graph_num = 1;
 Blockly.GogoCode['data_processor'] = function(block) {
   var dropdown_process_type = block.getFieldValue('process_type');
-  var text_processor_name = block.getFieldValue('processor_name');
+  var text_processor_name = (
+      Blockly.GogoCode.sonification_graph_prefixes[dropdown_process_type] +
+      "_" + Blockly.GogoCode.sonification_graph_num
+  );
+  Blockly.GogoCode.sonification_graph_num++;
   var code = dropdown_process_type + '/' + text_processor_name + '/';
   return code;
 };
@@ -1272,26 +1295,25 @@ Blockly.GogoCode['sonify'] = function(block) {
 
   var value_sensor = Blockly.GogoCode.valueToCode(block, 'sensor', Blockly.GogoCode.ORDER_ATOMIC);
   var statements_mapping = Blockly.GogoCode.statementToCode(block, 'mapping');
-  var number_scale_min = block.getFieldValue('scale_min');
-  var number_scale_max = block.getFieldValue('scale_max');
   var statements_output = Blockly.GogoCode.statementToCode(block, 'output');
-  var dropdown_output_sample_sucker = block.getFieldValue('output_sample_sucker');
+  var dropdown_output_sample_sucker = 'dac'; //block.getFieldValue('output_sample_sucker');
 
   // error correction
-  if (!value_sensor || !statements_mapping || !number_scale_min || !number_scale_max || !statements_output) {
+  if (!value_sensor || !statements_mapping || !statements_output) {
     return '';
   }
   
   // first, construct mapping        // no whitespace // strip end whitespace (unnecessary)
   var mapping = statements_mapping.replace(/\s/g,''); //.replace(/^\s+|\s+$/g, '');
   // second, construct scale
-  var scale = 'scale/' + number_scale_min + '/' + number_scale_max + '/';
+
   
   var osc_elements = statements_output.split('/');
-  var osc_type = osc_elements[1];
+  var scale = 'scale/' + osc_elements[1] + '/' + osc_elements[2] + '/';
+  var osc_type = osc_elements[4];
   // no whitespace
-  var osc_name = osc_elements[2].replace(/\s/g,'')
-  var param_name = osc_elements[4];
+  var osc_name = osc_elements[5].replace(/\s/g,'')
+  var param_name = osc_elements[6];
   
   // third, send commands to setup audio graph
   var code = mini_message('newosc/' + osc_type + '/' + osc_name + '//');
