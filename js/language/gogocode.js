@@ -1208,26 +1208,24 @@ Blockly.GogoCode['test_do_sth'] = function(block) {
 // ================================================
 
 // ================= SONIFICATION =================
+Blockly.GogoCode.sonification_endcommands = '';
 Blockly.GogoCode['init_sonification'] = function(block) {
-  // TODO: Assemble JavaScript into code variable.
   var code = '<span class="c330">sendmessage "@sonification,on//" 1</span>\nwait 20\n';
+  Blockly.GogoCode.sonification_endcommands = '';
   return code;
 };
 
 Blockly.GogoCode['ugen'] = function(block) {
   var dropdown_osctype = block.getFieldValue('OscType');
   var text_varname = block.getFieldValue('varname');
-  // TODO: Assemble JavaScript into code variable.
-  // TODO: make it something that sonify block can parse, rather than something directly translatable to code
   var code = 'newosc/' + dropdown_osctype + '/' + text_varname;
   // TODO: Change ORDER_NONE to the correct strength.
-  return [code, Blockly.JavaScript.ORDER_NONE];
+  return [code, Blockly.GogoCode.ORDER_NONE];
 };
 
 Blockly.GogoCode['ugen_params'] = function(block) {
   var dropdown_param_name = block.getFieldValue('param_name');
-  var value_ugen_param = Blockly.GogoCode.valueToCode(block, 'ugen_param', Blockly.JavaScript.ORDER_ATOMIC);
-  // TODO: Assemble JavaScript into code variable.
+  var value_ugen_param = Blockly.GogoCode.valueToCode(block, 'ugen_param', Blockly.GogoCode.ORDER_ATOMIC);
   var code = value_ugen_param + '/param/' + dropdown_param_name + '/';
   return code;
 };
@@ -1235,8 +1233,7 @@ Blockly.GogoCode['ugen_params'] = function(block) {
 Blockly.GogoCode['data_processor'] = function(block) {
   var dropdown_process_type = block.getFieldValue('process_type');
   var text_processor_name = block.getFieldValue('processor_name');
-  // TODO: Assemble JavaScript into code variable.
-  var code = /*'data_processor/' + */ dropdown_process_type + '/' + text_processor_name + '/';
+  var code = dropdown_process_type + '/' + text_processor_name + '/';
   return code;
 };
 
@@ -1265,7 +1262,7 @@ Blockly.GogoCode['sonify'] = function(block) {
       return code
   };
 
-  var value_sensor = Blockly.GogoCode.valueToCode(block, 'sensor', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_sensor = Blockly.GogoCode.valueToCode(block, 'sensor', Blockly.GogoCode.ORDER_ATOMIC);
   var statements_mapping = Blockly.GogoCode.statementToCode(block, 'mapping');
   var number_scale_min = block.getFieldValue('scale_min');
   var number_scale_max = block.getFieldValue('scale_max');
@@ -1296,13 +1293,25 @@ Blockly.GogoCode['sonify'] = function(block) {
   Blockly.GogoCode.sonification_number++;
   
   code += mini_message('dataprocess/from/' + sonification_datafile + '/' + mapping + scale + osc_type + '/' + osc_name + '/' + param_name + '//');
-          
-  // while-true, send the value of the sensor 
-  code += 'forever\n[\n' + 
-          '  record ' + value_sensor + ' "' + sonification_datafile + '"\n' +
-          mini_message('checkdata/' + sonification_datafile + '//') +
-          '  wait 1 \n]\n';
   
+  // statements to execute for this sonification in the final forever loop
+  Blockly.GogoCode.sonification_endcommands += 
+      '  record ' + value_sensor + ' "' + sonification_datafile + '"\n  wait 1\n' +
+      mini_message('checkdata/' + sonification_datafile + '//');
+  
+  return code;
+};
+
+
+Blockly.GogoCode['loop_sonify'] = function(block) {
+  var code = 'forever\n[\n' + Blockly.GogoCode.sonification_endcommands + ']\n';
+  return code;
+};
+
+
+Blockly.GogoCode['loop_sonify_and'] = function(block) {
+  var extra_statements = Blockly.GogoCode.statementToCode(block, 'extra_statements');
+  var code = 'forever\n[\n' + Blockly.GogoCode.sonification_endcommands + extra_statements + ']\n';
   return code;
 };
 

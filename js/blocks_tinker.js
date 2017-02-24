@@ -19,8 +19,8 @@ Blockly.Blocks['ugen'] = {
   helpUrl: 'http://www.example.com/',
   init: function() {
     this.appendDummyInput()
-        //.appendField(new Blockly.FieldDropdown([[{"src":"http://i.imgur.com/nrNWnyK.png","width":50,"height":30,"alt":"sine wave"},"SinOsc"], [{"src":"http://i.imgur.com/ChLYYLM.png","width":50,"height":30,"alt":"triangle wave"},"TriOsc"], [{"src":"http://i.imgur.com/jnWrCiS.png","width":50,"height":30,"alt":"square wave"},"SqrOsc"], [{"src":"http://i.imgur.com/6mrVUEL.png","width":50,"height":30,"alt":"sawtooth wave"},"SawOsc"]]), "OscType")
-        //.appendField(new Blockly.FieldDropdown([['sine wave: <img src="http://i.imgur.com/nrNWnyK.png" alt="sine wave" height="30" width="50">',"SinOsc"], ["triangle wave","TriOsc"], ["square wave","SqrOsc"], ["sawtooth wave","SawOsc"]]), "OscType")
+        //.appendField(new Blockly.FieldDropdown([[{"src":"http://i.imgur.com/nrNWnyK.png","width":50,"height":30,"alt":"sine wave"},"sin"], [{"src":"http://i.imgur.com/ChLYYLM.png","width":50,"height":30,"alt":"triangle wave"},"tri"], [{"src":"http://i.imgur.com/jnWrCiS.png","width":50,"height":30,"alt":"square wave"},"sqr"], [{"src":"http://i.imgur.com/6mrVUEL.png","width":50,"height":30,"alt":"sawtooth wave"},"saw"]]), "OscType")
+        //.appendField(new Blockly.FieldDropdown([['sine wave: <img src="http://i.imgur.com/nrNWnyK.png" alt="sine wave" height="30" width="50">',"sin"], ["triangle wave","tri"], ["square wave","sqr"], ["sawtooth wave","saw"]]), "OscType")
         .appendField(new Blockly.FieldDropdown([["a sine wave","sin"], ["a triangle wave","tri"], ["a square wave","sqr"], ["a sawtooth wave","saw"]]), "OscType")
         .appendField("called")
         .appendField(new Blockly.FieldTextInput("my_sound"), "varname");
@@ -94,6 +94,35 @@ Blockly.Blocks['sonify'] = {
     this.setInputsInline(false);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
+    this.setColour(120);
+    this.setTooltip('');
+  }
+};
+
+
+Blockly.Blocks['loop_sonify'] = {
+  category: 'Sonification',
+  helpUrl: 'http://www.example.com/',
+  init: function() {
+    this.appendDummyInput()
+        .appendField("finally, run sonifications forever");
+    this.setPreviousStatement(true, null);
+    this.setColour(120);
+    this.setTooltip('');
+  }
+};
+
+
+Blockly.Blocks['loop_sonify_and'] = {
+  category: 'Sonification',
+  helpUrl: 'http://www.example.com/',
+  init: function() {
+    this.appendDummyInput()
+        .appendField("finally, run sonifications forever and");
+    this.appendStatementInput("extra_statements")
+        .setCheck(null)
+        .appendField("forever do");
+    this.setPreviousStatement(true, null);
     this.setColour(120);
     this.setTooltip('');
   }
