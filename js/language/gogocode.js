@@ -1264,7 +1264,7 @@ Blockly.GogoCode['sonify'] = function(block) {
           console.log(brokenup[i]);
           code += '<span class="c330">sendmessage "@sonification,' + 
                   brokenup[i] + '" 1</span>\n';
-          code += 'wait 3\n;'
+          code += 'wait 1\n;'
       }
       console.log(code);
       return code
