@@ -1240,7 +1240,6 @@ Blockly.GogoCode['ugen_params'] = function(block) {
 
   var code = 'scale/' + text_scale_min + '/' + text_scale_max + '/';
   code += value_osc + '/' + dropdown_param_name;
-  console.log(code);
   return code;
 };
 
@@ -1284,12 +1283,10 @@ Blockly.GogoCode['sonify'] = function(block) {
           i += size_breakup;
       }
       for (var i = 0; i < brokenup.length; i++) {
-          console.log(brokenup[i]);
           code += '<span class="c330">sendmessage "@sonification,' + 
                   brokenup[i] + '" 1</span>\n';
           code += 'wait 1\n;'
       }
-      console.log(code);
       return code
   };
 
