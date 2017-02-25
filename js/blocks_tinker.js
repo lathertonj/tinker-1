@@ -106,11 +106,11 @@ Blockly.Blocks['ugen_params'] = {
             my_max_val.setText(String(max_val));
             
         }), "param_name")
-        .appendField("using values between")
+        .appendField("in the range [")
         .appendField(new Blockly.FieldTextInput("30", validator), "scale_min")
-        .appendField("and")
+        .appendField(",")
         .appendField(new Blockly.FieldTextInput("127", validator), "scale_max")
-        .appendField("[ SOME EXTRA TEXT ] ");        
+        .appendField("] [ SOME EXTRA TEXT ] ");
     my_min_val = this.inputList[0].fieldRow[2];
     my_max_val = this.inputList[0].fieldRow[4];
     this.setInputsInline(false); // BROKEN
@@ -177,12 +177,12 @@ Blockly.Blocks['sonify'] = {
   init: function() {
     this.appendValueInput("sensor")
         .setCheck(null)
-        .appendField("transform sensor");
+        .appendField("remap the value of sensor");
     this.appendStatementInput("mapping")
         .setCheck(null)
         .appendField("with data transformations");
     this.appendDummyInput()
-        .appendField("then connect this");
+        .appendField("then connect this remapped value");
     this.appendStatementInput("output")
         .setCheck(null)
         .appendField("to the sound parameter");
