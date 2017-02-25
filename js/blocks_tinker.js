@@ -14,24 +14,6 @@ Blockly.Blocks['init_sonification'] = {
 };
 
 
-// Blockly.Blocks['ugen_old'] = {
-//   category: 'Sonification',
-//   helpUrl: 'http://www.example.com/',
-//   init: function() {
-//     this.appendDummyInput()
-//         //.appendField(new Blockly.FieldDropdown([[{"src":"http://i.imgur.com/nrNWnyK.png","width":50,"height":30,"alt":"sine wave"},"sin"], [{"src":"http://i.imgur.com/ChLYYLM.png","width":50,"height":30,"alt":"triangle wave"},"tri"], [{"src":"http://i.imgur.com/jnWrCiS.png","width":50,"height":30,"alt":"square wave"},"sqr"], [{"src":"http://i.imgur.com/6mrVUEL.png","width":50,"height":30,"alt":"sawtooth wave"},"saw"]]), "OscType")
-//         //.appendField(new Blockly.FieldDropdown([['sine wave: <img src="http://i.imgur.com/nrNWnyK.png" alt="sine wave" height="30" width="50">',"sin"], ["triangle wave","tri"], ["square wave","sqr"], ["sawtooth wave","saw"]]), "OscType")
-//         .appendField(new Blockly.FieldDropdown([["a sine wave","sin"], ["a triangle wave","tri"], ["a square wave","sqr"], ["a sawtooth wave","saw"]]), "OscType")
-//         .appendField("called")
-//         .appendField(new Blockly.FieldTextInput("my_sound"), "varname");
-//     this.setInputsInline(false);
-//     this.setOutput(true, "UGen");
-//     this.setColour(275);
-//     this.setTooltip('');
-//   }
-// };
-
-
 Blockly.Blocks['ugen'] = {
   category: 'Sonification',
   helpUrl: 'http://www.example.com/',
@@ -56,12 +38,11 @@ Blockly.Blocks['ugen'] = {
                 // return newVal;
             }
         ), "OscType")
-        .appendField("(")
         .appendField(new Blockly.FieldImage("http://i.imgur.com/kBkJF5I.png", 50, 20, "*"), "oscimage")
-        .appendField(")  called")
+        .appendField(" called")
         .appendField(new Blockly.FieldTextInput("my_sound"), "varname");
     //this.getField("oscimage").EDITABLE = true;
-    thisImage = thisBlock.inputList[0].fieldRow[3]
+    thisImage = thisBlock.inputList[0].fieldRow[2]
     thisImage.EDITABLE = true;
     this.setOutput(true, null);
     this.setColour(270);
@@ -113,7 +94,7 @@ Blockly.Blocks['ugen_params'] = {
         .appendField("] [ SOME EXTRA TEXT ] ");
     my_min_val = this.inputList[0].fieldRow[2];
     my_max_val = this.inputList[0].fieldRow[4];
-    this.setInputsInline(false); // BROKEN
+    this.setInputsInline(false); // SETTING OK BUT NOT DISPLAYING PROPERLY
     this.setPreviousStatement(true, null);
     this.setColour(230);
     this.setTooltip('');
@@ -158,10 +139,8 @@ Blockly.Blocks['data_processor'] = {
                 // return newVal;
             }
         ), "process_type")
-        .appendField("(")
         .appendField(new Blockly.FieldImage("http://i.imgur.com/qMOL6mK.png", 50, 30, "*"), "oscimage")
-        .appendField(")")
-    thisImage = thisBlock.inputList[0].fieldRow[3]
+    thisImage = thisBlock.inputList[0].fieldRow[2]
     thisImage.EDITABLE = true;
     this.setPreviousStatement(true, "DataProcessor");
     this.setNextStatement(true, "DataProcessor");
