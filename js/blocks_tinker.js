@@ -51,12 +51,11 @@ Blockly.Blocks['ugen'] = {
   }
 };
 
-
 Blockly.Blocks['ugen_params'] = {
+  min_val: 30,
+  max_val: 108,
+  units: "(MIDI)",
   init: function() {
-    var min_val = 30;
-    var max_val = 108;
-    var units = "(MIDI)";
     var my_min_val = null;
     var my_max_val = null;
     var my_units_val = null;
@@ -64,11 +63,15 @@ Blockly.Blocks['ugen_params'] = {
     var validator = function(text) {
         var new_text = Blockly.FieldTextInput.numberValidator(text) || "0";
         var new_float = parseFloat(new_text);
-        if (new_float < min_val) {
-            new_float = min_val;
-        } else if (new_float > max_val) {
-            new_float = max_val;
+        if (new_float < Blockly.Blocks.ugen_params.min_val) {
+            new_float = Blockly.Blocks.ugen_params.min_val;
+        } else if (new_float > Blockly.Blocks.ugen_params.max_val) {
+            new_float = Blockly.Blocks.ugen_params.max_val;
         }
+        console.log(Blockly.Blocks.ugen_params.min_val);
+        console.log(Blockly.Blocks.ugen_params.max_val);
+        console.log(Blockly.Blocks.ugen_params.units);
+        my_units_val.setText(Blockly.Blocks.ugen_params.units);
         return String(new_float);
     };
     
@@ -78,21 +81,24 @@ Blockly.Blocks['ugen_params'] = {
         .appendField("parameter")
         .appendField(new Blockly.FieldDropdown([["note","note"], ["frequency","freq"], ["loudness","gain"]], function( newVal ) {
             if (newVal == "freq") {
-                min_val = 80;
-                max_val = 2000;
-                units = "(Hz)";
+                Blockly.Blocks.ugen_params.min_val = 80;
+                Blockly.Blocks.ugen_params.max_val = 2000;
+                Blockly.Blocks.ugen_params.units = "(Hz)";
             } else if (newVal == "note") {
-                min_val = 30;
-                max_val = 108;
-                units = "(MIDI)";
+                Blockly.Blocks.ugen_params.min_val = 30;
+                Blockly.Blocks.ugen_params.max_val = 108;
+                Blockly.Blocks.ugen_params.units = "(MIDI)";
             } else if (newVal == "gain") {
-                min_val = 0;
-                max_val = 1;
-                units = "(gain)";
+                Blockly.Blocks.ugen_params.min_val = 0;
+                Blockly.Blocks.ugen_params.max_val = 1;
+                Blockly.Blocks.ugen_params.units = "(gain)";
             }
-            my_min_val.setText(String(min_val));
-            my_max_val.setText(String(max_val));
-            my_units_val.setText(units);
+            my_min_val.setText(String(Blockly.Blocks.ugen_params.min_val));
+            my_max_val.setText(String(Blockly.Blocks.ugen_params.max_val));
+            my_units_val.setText(Blockly.Blocks.ugen_params.units);
+            console.log(Blockly.Blocks.ugen_params.min_val);
+            console.log(Blockly.Blocks.ugen_params.max_val);
+            console.log(Blockly.Blocks.ugen_params.units);
             
         }), "param_name")
         .appendField("of oscillator");
@@ -102,7 +108,7 @@ Blockly.Blocks['ugen_params'] = {
         .appendField(new Blockly.FieldTextInput("30", validator), "scale_min")
         .appendField("and")
         .appendField(new Blockly.FieldTextInput("127", validator), "scale_max")
-        .appendField(units);
+        .appendField("(MIDI)");
     my_min_val = this.inputList[1].fieldRow[1];
     my_max_val = this.inputList[1].fieldRow[3];
     my_units_val = this.inputList[1].fieldRow[4];
