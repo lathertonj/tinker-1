@@ -21,6 +21,7 @@ Blockly.Blocks['ugen'] = {
     var thisBlock = this;
     var thisImage = null;
     this.appendDummyInput()
+        .appendField("oscillator")
         .appendField(new Blockly.FieldDropdown(
             [["sine wave","sin"],
              ["triangle wave","tri"],
@@ -42,7 +43,7 @@ Blockly.Blocks['ugen'] = {
         .appendField(" called")
         .appendField(new Blockly.FieldTextInput("my_sound"), "varname");
     //this.getField("oscimage").EDITABLE = true;
-    thisImage = thisBlock.inputList[0].fieldRow[2]
+    thisImage = thisBlock.inputList[0].fieldRow[3]
     thisImage.EDITABLE = true;
     this.setOutput(true, null);
     this.setColour(270);
@@ -55,8 +56,10 @@ Blockly.Blocks['ugen_params'] = {
   init: function() {
     var min_val = 30;
     var max_val = 108;
+    var units = "(MIDI)";
     var my_min_val = null;
     var my_max_val = null;
+    var my_units_val = null;
     
     var validator = function(text) {
         var new_text = Blockly.FieldTextInput.numberValidator(text) || "0";
@@ -77,26 +80,32 @@ Blockly.Blocks['ugen_params'] = {
             if (newVal == "freq") {
                 min_val = 80;
                 max_val = 2000;
+                units = "(Hz)";
             } else if (newVal == "note") {
                 min_val = 30;
                 max_val = 108;
+                units = "(MIDI)";
             } else if (newVal == "gain") {
                 min_val = 0;
                 max_val = 1;
+                units = "(gain)";
             }
             my_min_val.setText(String(min_val));
             my_max_val.setText(String(max_val));
+            my_units_val.setText(units);
             
         }), "param_name")
-        .appendField("of sound generator");
+        .appendField("of oscillator");
     this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("using values between")
         .appendField(new Blockly.FieldTextInput("30", validator), "scale_min")
         .appendField("and")
-        .appendField(new Blockly.FieldTextInput("127", validator), "scale_max");
+        .appendField(new Blockly.FieldTextInput("127", validator), "scale_max")
+        .appendField(units);
     my_min_val = this.inputList[1].fieldRow[1];
     my_max_val = this.inputList[1].fieldRow[3];
+    my_units_val = this.inputList[1].fieldRow[4];
     this.setInputsInline(false); // SETTING OK BUT NOT DISPLAYING PROPERLY
     this.setPreviousStatement(true, null);
     this.setColour(230);
