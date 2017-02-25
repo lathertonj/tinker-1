@@ -53,8 +53,8 @@ Blockly.Blocks['ugen'] = {
 
 Blockly.Blocks['ugen_params'] = {
   init: function() {
-    var min_val = 80;
-    var max_val = 2000;
+    var min_val = 30;
+    var max_val = 108;
     var my_min_val = null;
     var my_max_val = null;
     
@@ -71,14 +71,15 @@ Blockly.Blocks['ugen_params'] = {
     
     this.appendValueInput("osc")
         .setCheck("UGen")
-        //.appendField("connect to the")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("parameter")
         .appendField(new Blockly.FieldDropdown([["note","note"], ["frequency","freq"], ["loudness","gain"]], function( newVal ) {
             if (newVal == "freq") {
                 min_val = 80;
                 max_val = 2000;
             } else if (newVal == "note") {
                 min_val = 30;
-                max_val = 127;
+                max_val = 108;
             } else if (newVal == "gain") {
                 min_val = 0;
                 max_val = 1;
@@ -87,13 +88,15 @@ Blockly.Blocks['ugen_params'] = {
             my_max_val.setText(String(max_val));
             
         }), "param_name")
-        .appendField("in the range [")
+        .appendField("of sound generator");
+    this.appendDummyInput()
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("using values between")
         .appendField(new Blockly.FieldTextInput("30", validator), "scale_min")
-        .appendField(",")
-        .appendField(new Blockly.FieldTextInput("127", validator), "scale_max")
-        .appendField("] [ SOME EXTRA TEXT ] ");
-    my_min_val = this.inputList[0].fieldRow[2];
-    my_max_val = this.inputList[0].fieldRow[4];
+        .appendField("and")
+        .appendField(new Blockly.FieldTextInput("127", validator), "scale_max");
+    my_min_val = this.inputList[1].fieldRow[1];
+    my_max_val = this.inputList[1].fieldRow[3];
     this.setInputsInline(false); // SETTING OK BUT NOT DISPLAYING PROPERLY
     this.setPreviousStatement(true, null);
     this.setColour(230);
